@@ -1,5 +1,7 @@
-var express = require('express')
+var	express = require('express')
 	, app = express()
+	,	server = require('http').Server(app)
+	,	io = require('socket.io')(server)
 	, User = require('./models/user')
 	, mongoose = require('mongoose')
 	, bodyParser = require('body-parser');
@@ -14,8 +16,9 @@ app.use(function (req, res, next) {
 app.use(require('morgan')('combined'));
 app.use(bodyParser.json());
 require('./routes/users')(app);
-//WebSockets server setup
-var server = require('http').createServer(app)
+require('./routes/games')(app, io);
+//WebSockets server setup 
+/*
 	, wss = new (require('ws').Server)({server: server})
 	, clients = 0
 	, id = 0;
@@ -30,4 +33,5 @@ wss.on('connection', ws => {
 	ws.on('close', () => wss.broadcast({ev: 'client count', data: --clients}));
 });
 
+*/
 server.listen(3000);
