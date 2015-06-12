@@ -11,7 +11,7 @@ module.exports = (app, io) => {
 		console.log(req.body.game);
 		new Game(req.body.game).save((err, game) => {
 			if (err) return res.status(500).send(err);
-			res.send(game);
+			res.send({game: game});
 			io.emit('new game', game);
 		});
 	});

@@ -16,18 +16,36 @@ module.exports = app => {
 		});
 	});
 	app.post('/api/users', (req, res, next) => {
-		User.register(
-				new User(req.body.user), 
-				req.body.user.password, 
-				(err, u) => {
-					if (err) { 
-						res.status(500);
-						res.send(err);
-					} else {
-						res.send(u);
+		if (req.body.user.password)
+			User.register(
+					new User(req.body.user), 
+					req.body.user.password, 
+					(err, u) => {
+						if (err) {
+							res.status(500);
+							res.send(err);
+						} else {
+							res.send(u);
+						}
 					}
-				}
-		);
+			);
+		else { /* FACEBOOK LOGIN LOGIC */
+			var u = User({
+				username: req.body.user.username,
+				fbid: req.body.user.fbid
+			});
+			u.save((err, user) => {
+				if (err && err.code == 11000)
+					return User.findOne(
+						{fbid: req.body.user.fbid}, 
+						'username fbid score',
+						(err, user) => res.send({user: user}) 
+					);
+				else if (err && err.code != 11000) 
+					return res.status(500).send(err);
+				res.send({user: user});
+			});
+		}
 	});
 	app.post('/api/login',
 		passport.authenticate('local'),
