@@ -6,5 +6,6 @@ var schema = new mongoose.Schema({
 	players: [{type: Schema.Types.ObjectId, ref: 'User'}],
 	owner: {type: Schema.Types.ObjectId, ref: 'User'}
 });
-module.exports = mongoose.model('Game', schema);
+
+var Game = module.exports = mongoose.model('Game', schema);
 

@@ -11,7 +11,6 @@ module.exports = app => {
 	app.get('/api/users/:id', (req, res, next) => {
 		User.find(req.params.id, 'username score', (err, u) => {
 			if (err) return res.send(404);
-			console.log('GOT USER YOU ARE LOOKING FOR', u);
 			res.send({user: u});
 		});
 	});
