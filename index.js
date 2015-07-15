@@ -26,4 +26,4 @@ require('./sockets/games')(io);
 
 server.listen(3000);
 
-Game.remove({}, () => {});
+//Game.remove({}, () => {});

@@ -7,10 +7,12 @@ module.exports = (app, io) => {
 			res.send({games: games});
 		});
 	});
+	app.get('/api/games/:id', (req, res, next) => {
+		Game.findById(req.params.id, (err, game) => res.json({game:game}));
+	});
 	app.post('/api/games', (req, res, next) => {
 		Game.find({owner: new require('mongoose').Types.ObjectId(req.body.game.owner)}, (err, games) => {
 			games.forEach(g => {
-				con
 				Game.findByIdAndRemove(g._id, (x, y) => io.emit('delete game', {id: g._id}));
 			});
 			new Game(req.body.game).save((err, game) => {
